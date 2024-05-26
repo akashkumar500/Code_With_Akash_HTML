@@ -1,0 +1,490 @@
+<!doctype html>
+<html lang="en"> 
+ <head> 
+  <meta charset="UTF-8"> 
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"> 
+  <title>Tic Tac Toe</title> 
+  <link rel="stylesheet" href="styles.css"> 
+ <style type="text/css" id="dcoder_stylesheet">/* General styling */
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: #f0f0f0;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    text-align: center;
+    background-color: #ffffff;
+    border-radius: 15px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    width: 310px;
+}
+
+.title {
+    font-size: 3.2rem;
+    margin-bottom: 20px;
+    color: #333333; /* Change title color to black */
+}
+
+.title.inactive {
+    color: #808080; /* Change title color to inactive (gray) */
+}
+
+/* Home screen styling */
+.mode-selection, .player-names, .symbol-selection {
+    margin-bottom: 20px;
+}
+
+.mode-button {
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    margin: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.mode-button.computer {
+    background-color: #007bff;
+}
+
+.mode-button.computer:hover {
+    background-color: #0056b3;
+}
+
+.mode-button.multiplayer {
+    background-color: #28a745;
+}
+
+.mode-button.multiplayer:hover {
+    background-color: #218838;
+}
+
+.start-button {
+    background-color: #ffc107;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.start-button:hover {
+    background-color: #e0a800;
+}
+
+.symbol-selection label {
+    margin-right: 20px;
+    font-size: 1.2rem;
+    color: #333333;
+}
+
+.hidden {
+    display: none;
+}
+
+/* Game screen styling */
+.game-screen {
+    display: none;
+}
+
+.board {
+    display: grid;
+    grid-template-columns: repeat(3, 100px);
+    grid-gap: 10px;
+    margin-bottom: 20px;
+}
+
+.cell {
+    width: 100px;
+    height: 100px;
+    background-color: #f0f0f0;
+    font-size: 4rem;
+    color: #333333;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.cell:hover {
+    background-color: #e0e0e0;
+}
+
+.status,.message {
+    font-size: 1.3rem;
+    color: #333333;
+    margin-top: 10px;
+}
+
+.message {
+    font-size: 2rem;
+    color: #FF0000;
+    margin-top: 15px;
+}
+
+.winner {
+    background-color: #FFFF00;
+    color: #333333;
+}
+
+.reset-button {
+    background-color: #E200FE;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+.reset-button:hover {
+    background-color: #E200FE;
+}
+
+.back-button {
+    background-color: #6c757d;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 10px;
+    transition: background-color 0.3s ease;
+    margin-top: 20px;
+}
+
+.back-button:hover {
+    background-color: #5a6268;
+}
+
+/* Add or modify styles as needed */
+
+.go-back-button {
+    background-color: #007bff;
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    font-size: 16px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    margin-top: 20px; /* Add margin to separate from reset button */
+}
+
+.go-back-button:hover {
+    background-color: #0056b3;
+}
+
+.game-mode {
+    background-color: #09BB03;
+    font-size: 1rem;
+    color: #333333;
+    margin-top: 10px;
+    color: white;
+    padding: 10px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    font-weight: bold;
+    display: inline-block;
+    cursor: pointer;
+}
+
+/* Add or modify styles as needed */
+.created-by {
+    position: absolute;
+    top: 5px; /* Adjust as needed */
+    right: 5px; /* Adjust as needed */
+    font-size: 8px;
+    color: white;
+    margin-top: 8px;
+    color: white;
+    padding: 2px;
+    border-radius: 6px;
+    margin-bottom: 1px;
+    display: inline-block;
+    cursor: pointer;
+    background-color: #0DA4C1;
+    
+}</style></head> 
+ <body> 
+  <div class="container" id="home-screen"> 
+   <h1 class="title inactive">Tic Tac Toe</h1> 
+   <div class="mode-selection"> <button class="mode-button computer" onclick="selectMode('computer')">Play with Computer</button> <button class="mode-button multiplayer" onclick="selectMode('multiplayer')">Play Multiplayer</button> 
+   </div> 
+   <div class="player-names hidden" id="name-selection"> 
+    <input type="text" id="player1" placeholder="Enter 1st Player Name"> 
+    <input type="text" id="player2" placeholder="Enter 2nd Player Name"> 
+    <div class="symbol-selection"> <label><input type="radio" name="playerSymbol" value="X" checked> X</label> <label><input type="radio" name="playerSymbol" value="O"> O</label> 
+    </div> <button class="start-button" onclick="startGame()">Start Game</button> 
+   </div> 
+  </div> 
+  <div class="container game-screen" id="game-screen"> 
+   <h1 class="title inactive">Tic Tac Toe</h1> 
+   <div class="game-mode" id="gameMode"></div> 
+   <div class="status">
+    Turn: <span id="currentPlayer">Akash</span>
+   </div> 
+   <div class="board"> 
+    <div class="cell" onclick="handleMove(0)"></div> 
+    <div class="cell" onclick="handleMove(1)"></div> 
+    <div class="cell" onclick="handleMove(2)"></div> 
+    <div class="cell" onclick="handleMove(3)"></div> 
+    <div class="cell" onclick="handleMove(4)"></div> 
+    <div class="cell" onclick="handleMove(5)"></div> 
+    <div class="cell" onclick="handleMove(6)"></div> 
+    <div class="cell" onclick="handleMove(7)"></div> 
+    <div class="cell" onclick="handleMove(8)"></div> 
+   </div> <button class="reset-button" onclick="resetGame()">Reset Game</button> <button class="go-back-button" onclick="goBack()">Go Back</button> 
+   <p id="message" class="message"></p> 
+  </div> 
+  <div class="created-by">
+   Created By Akash Kumar
+  </div> <!-- Added Created By Akash Kumar text --> 
+  <script src="script.js"></script> 
+ 
+<script type="text/javascript" id="dcoder_script">let currentPlayer = 'X';
+let userPlayer = 'X';
+let computerPlayer = 'O';
+let board = ['', '', '', '', '', '', '', '', ''];
+let gameActive = true;
+let isAiMode = true;
+let player1Name = 'Player 1';
+let player2Name = 'Player 2';
+
+// Function to select game mode
+function selectMode(mode) {
+    isAiMode = mode === 'computer';
+    document.getElementById('name-selection').classList.remove('hidden');
+    if (isAiMode) {
+        document.getElementById('player2').classList.add('hidden');
+        document.getElementById('player2').value = 'Computer';
+    } else {
+        document.getElementById('player2').classList.remove('hidden');
+    }
+}
+
+// Function to start the game
+function startGame() {
+    player1Name = document.getElementById('player1').value || 'Player 1';
+    player2Name = document.getElementById('player2').value || (isAiMode ? 'Computer' : 'Player 2');
+
+    userPlayer = document.querySelector('input[name="playerSymbol"]:checked').value;
+    computerPlayer = userPlayer === 'X' ? 'O' : 'X';
+    currentPlayer = 'X';
+
+    document.getElementById('home-screen').style.display = 'none';
+    document.getElementById('game-screen').style.display = 'block';
+
+    document.getElementById('currentPlayer').innerText = currentPlayer;
+    document.getElementById('gameMode').innerText = isAiMode ? `You are playing with computer.` : `You are playing multiplayer.`;
+
+    if (isAiMode && currentPlayer === computerPlayer) {
+        setTimeout(() => {
+            makeAiMove();
+        }, 500);
+    }
+    resetGame();
+}
+
+// Function to handle player moves
+function handleMove(cellIndex) {
+    if (gameActive && board[cellIndex] === '') {
+        board[cellIndex] = currentPlayer;
+        const cell = document.getElementsByClassName('cell')[cellIndex];
+        cell.innerText = currentPlayer;
+        if (checkWin()) {
+            document.getElementById('message').innerText = `${currentPlayer === userPlayer ? player1Name : player2Name} wins!`;
+            gameActive = false;
+            const winningCombo = getWinningCombo();
+            markWinningCells(winningCombo);
+        } else if (checkDraw()) {
+            document.getElementById('message').innerText = `It's a draw!`;
+            gameActive = false;
+        } else {
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            document.getElementById('currentPlayer').innerText = currentPlayer;
+            if (isAiMode && currentPlayer === computerPlayer) {
+                setTimeout(() => {
+                    makeAiMove();
+                }, 500);
+            }
+        }
+    }
+}
+
+// Function to check for a win
+function checkWin() {
+    const winningCombos = getWinningCombos();
+
+    for (let combo of winningCombos) {
+        const [a, b, c] = combo;
+        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+            return true;
+        }
+    }
+    return false;
+}
+
+// Function to check for a draw
+function checkDraw() {
+    return board.every(cell => cell !== '');
+}
+
+// Function to get all winning combinations
+function getWinningCombos() {
+    return [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8], // rows
+        [0, 3, 6], [1, 4, 7], [2, 5, 8], // columns
+        [0, 4, 8], [2, 4, 6] // diagonals
+    ];
+}
+
+// Function to get the winning combination
+function getWinningCombo() {
+    const winningCombos = getWinningCombos();
+
+    for (let combo of winningCombos) {
+        const [a, b, c] = combo;
+        if (board[a] && board[a] === board[b] && board[a] === board[c]) {
+            return combo;
+        }
+    }
+    return null;
+}
+
+// Function to mark the winning cells
+function markWinningCells(winningCombo) {
+    const cells = document.getElementsByClassName('cell');
+    for (let index of winningCombo) {
+        cells[index].classList.add('winner');
+    }
+}
+
+function resetGame() {
+    currentPlayer = 'X';
+    board = ['', '', '', '', '', '', '', '', ''];
+    gameActive = true;
+    document.getElementById('currentPlayer').innerText = currentPlayer;
+    document.getElementById('message').innerText = '';
+    const cells = document.getElementsByClassName('cell');
+    for (let cell of cells) {
+        cell.innerText = '';
+        cell.classList.remove('winner');
+    }
+
+    // If it's AI mode and it's the computer's turn, make the AI move
+    if (isAiMode && currentPlayer === computerPlayer) {
+        setTimeout(() => {
+            makeAiMove();
+        }, 500);
+    }
+}
+
+// Function for AI move
+function makeAiMove() {
+    let bestScore = -Infinity;
+    let bestMove;
+    for (let i = 0; i < board.length; i++) {
+        if (board[i] === '') {
+            board[i] = computerPlayer;
+            let score = minimax(board, 0, false);
+            board[i] = '';
+            if (score > bestScore) {
+                bestScore = score;
+                bestMove = i;
+            }
+        }
+    }
+    setTimeout(() => {
+        handleMove(bestMove);
+    }, 500); // Delay AI move by 500 milliseconds
+}
+
+// Minimax algorithm for AI decision making
+function minimax(board, depth, isMaximizing) {
+    if (checkWin()) {
+        return isMaximizing ? -10 + depth : 10 - depth;
+    } else if (checkDraw()) {
+        return 0;
+    }
+
+    if (isMaximizing) {
+        let bestScore = -Infinity;
+        for (let i = 0; i < board.length; i++) {
+            if (board[i] === '') {
+                board[i] = computerPlayer;
+                let score = minimax(board, depth + 1, false);
+                board[i] = '';
+                bestScore = Math.max(score, bestScore);
+            }
+        }
+        return bestScore;
+    } else {
+        let bestScore = Infinity;
+        for (let i = 0; i < board.length; i++) {
+            if (board[i] === '') {
+                board[i] = userPlayer;
+                let score = minimax(board, depth + 1, true);
+                board[i] = '';
+                bestScore = Math.min(score, bestScore);
+            }
+        }
+        return bestScore;
+    }
+}
+
+// Function to go back
+function goBack() {
+    document.getElementById('home-screen').style.display = 'block';
+    document.getElementById('game-screen').style.display = 'none';
+}
+
+// Function to handle player moves
+function handleMove(cellIndex) {
+    if (gameActive && board[cellIndex] === '') {
+        board[cellIndex] = currentPlayer;
+        const cell = document.getElementsByClassName('cell')[cellIndex];
+        cell.innerText = currentPlayer;
+        if (checkWin()) {
+            document.getElementById('message').innerText = `${currentPlayer === userPlayer ? player1Name : player2Name} wins!`;
+            gameActive = false;
+            const winningCombo = getWinningCombo();
+            markWinningCells(winningCombo);
+        } else if (checkDraw()) {
+            document.getElementById('message').innerText = `It's a draw!`;
+            gameActive = false;
+        } else {
+            currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+            document.getElementById('currentPlayer').innerText = currentPlayer === userPlayer ? player1Name : player2Name;
+            if (isAiMode && currentPlayer === computerPlayer) {
+                setTimeout(() => {
+                    makeAiMove();
+                }, 500);
+            }
+        }
+    }
+}</script></body></html>
